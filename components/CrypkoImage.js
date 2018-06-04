@@ -1,16 +1,16 @@
 import PropTypes from 'prop-types';
 import sha1 from 'sha1';
-import { URI_CRYPKO_STATIC, URI_CRYPKO_GOOGLE, HASH_SECRET } from './common';
+import { URI_IMG, URI_IMG2, HASH_SECRET } from './common';
 
 function getImageUri(crypko, size) {
   let base;
   switch (size) {
     case 'sm':
     case 'lg':
-      base = URI_CRYPKO_STATIC;
+      base = URI_IMG;
       break;
     case 'xsm':
-      base = URI_CRYPKO_GOOGLE;
+      base = URI_IMG2;
       break;
     default:
       throw new Error(`getImageUri: unknown size "${size}"`);

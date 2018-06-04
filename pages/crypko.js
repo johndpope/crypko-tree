@@ -1,7 +1,7 @@
 import { PureComponent } from 'react';
 import fetch from 'isomorphic-unfetch';
 
-import { URI_CRYPKO_API } from '../components/common';
+import { URI_API } from '../components/common';
 import * as types from '../components/types';
 import Layout from '../components/Layout';
 import Crypko from '../components/Crypko';
@@ -9,7 +9,7 @@ import Crypko from '../components/Crypko';
 const detailMemo = {};
 async function fetchDetail(crypkoId) {
   if (!detailMemo[crypkoId]) {
-    const res = await fetch(`${URI_CRYPKO_API}/crypkos/${crypkoId}/detail`);
+    const res = await fetch(`${URI_API}/crypkos/${crypkoId}/detail`);
     const json = await res.json();
     detailMemo[crypkoId] = json;
   }
