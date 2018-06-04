@@ -1,25 +1,16 @@
 import * as types from './types';
+import MaterialRoot from './MaterialRoot';
 
 function Header() {
-  return (
-    <div>
-      Header
-      <style jsx>{`
-        div {
-          background-color: slategray;
-          height: 100px;
-        }
-      `}</style>
-    </div>
-  );
+  return <div>hoge</div>;
 }
 
 export default function Layout(props) {
   return (
-    <div>
+    <MaterialRoot>
       <Header />
       {props.children}
-    </div>
+    </MaterialRoot>
   );
 }
 
