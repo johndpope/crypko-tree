@@ -24,7 +24,8 @@
     "next": "^6.0.3",
     "prop-types": "^15.6.1",
     "react": "^16.4.0",
-    "react-dom": "^16.4.0"
+    "react-dom": "^16.4.0",
+    "sha1": "^1.1.1"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.3",
