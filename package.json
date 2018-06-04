@@ -19,13 +19,17 @@
   },
   "homepage": "https://github.com/stak/crypko-tree#readme",
   "dependencies": {
+    "@material-ui/core": "^1.2.0",
     "express": "^4.16.3",
     "isomorphic-unfetch": "^2.0.0",
+    "jss": "^9.8.2",
     "next": "^6.0.3",
     "prop-types": "^15.6.1",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
-    "sha1": "^1.1.1"
+    "react-jss": "^8.4.0",
+    "sha1": "^1.1.1",
+    "styled-jsx": "^2.2.6"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.3",
