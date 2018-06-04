@@ -2,12 +2,11 @@ import { withStyles } from '@material-ui/core/styles';
 import * as types from './types';
 import withRoot from '../util/withRoot';
 
-const styles = (theme) => ({
+const styles = {
   root: {
     textAlign: 'center',
-    paddingTop: theme.spacing.unit * 20,
   },
-});
+};
 
 function MaterialRoot(props) {
   const { classes } = props;

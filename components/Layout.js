@@ -1,11 +1,8 @@
 import * as types from './types';
 import MaterialRoot from './MaterialRoot';
+import Header from './Header';
 
-function Header() {
-  return <div>hoge</div>;
-}
-
-export default function Layout(props) {
+function Layout(props) {
   return (
     <MaterialRoot>
       <Header />
@@ -13,7 +10,8 @@ export default function Layout(props) {
     </MaterialRoot>
   );
 }
-
 Layout.propTypes = {
   children: types.children.isRequired,
 };
+
+export default Layout;

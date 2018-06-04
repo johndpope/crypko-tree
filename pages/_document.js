@@ -3,6 +3,7 @@ import Document, { Head, Main, NextScript } from 'next/document';
 import JssProvider from 'react-jss/lib/JssProvider';
 import flush from 'styled-jsx/server';
 import getPageContext from '../util/getPageContext';
+import { APP_NAME } from '../components/common';
 
 class MyDocument extends Document {
   render() {
@@ -11,7 +12,7 @@ class MyDocument extends Document {
     return (
       <html lang="ja" dir="ltr">
         <Head>
-          <title>crypko-tree</title>
+          <title>{APP_NAME}</title>
           <meta charSet="utf-8" />
           {/* Use minimum-scale=1 to enable GPU rasterization */}
           <meta
