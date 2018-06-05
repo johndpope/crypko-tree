@@ -19,6 +19,10 @@ export const children = PropTypes.oneOfType([
   PropTypes.node,
 ]);
 export const crypkoCache = PropTypes.objectOf(crypko);
+export const graph = PropTypes.shape({
+  id: PropTypes.number.isRequired,
+  depth: PropTypes.number.isRequired,
+});
 export const classes = PropTypes.objectOf(PropTypes.string);
 
 export const { string, number, func } = PropTypes;

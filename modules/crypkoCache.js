@@ -4,7 +4,13 @@ const ADD = 'CACHE_ADD';
 
 // action creator
 export function fetch(crypkoId) {
-  return { type: FETCH, payload: crypkoId };
+  return {
+    type: FETCH,
+    payload: {
+      id: crypkoId,
+      data: null,
+    },
+  };
 }
 export function add(crypkoId, crypkoDetail) {
   return {
@@ -22,7 +28,7 @@ export default function reducer(state = initialState, action) {
     case FETCH: // TODO
       return {
         ...state,
-        [action.payload]: {},
+        [action.payload.id]: action.payload.data,
       };
     case ADD:
       return {

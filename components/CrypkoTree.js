@@ -1,14 +1,54 @@
 import * as types from '../util/types';
+import CrypkoNodes from './CrypkoNodes';
 
-export default function CrypkoTree({ width, height, children }) {
+// TODO: add rules to filter
+function makeGraph(id, cache, depth = 0, from = 0) {
+  const detail = cache[id];
+
+  const originRange = () => depth >= 0 && depth <= 1;
+  const derivativeRange = () => depth <= 0 && depth >= -1;
+
+  if (!detail) {
+    return {
+      id,
+      depth,
+    };
+  }
+  return {
+    id,
+    depth,
+    detail,
+    matron:
+      originRange() && detail.matron && detail.matron.id !== from
+        ? makeGraph(detail.matron.id, cache, depth + 1, id)
+        : null,
+    sire:
+      originRange() && detail.sire && detail.sire.id !== from
+        ? makeGraph(detail.sire.id, cache, depth + 1, id)
+        : null,
+    derivatives: derivativeRange()
+      ? detail.derivatives
+          .filter((derivative) => derivative.id !== from)
+          .map((derivative) => makeGraph(derivative.id, cache, depth - 1, id))
+      : [],
+  };
+}
+
+export default function CrypkoTree(props) {
+  const { width, height, target, cache } = props;
+  const graph = makeGraph(target, cache);
+  console.log(graph);
   return (
     <svg
+      style={{
+        overflow: 'visible',
+      }}
       width={width}
       height={height}
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
     >
-      {children}
+      <CrypkoNodes x={width / 2} y={height / 2} graph={graph} />
     </svg>
   );
 }
@@ -16,7 +56,8 @@ export default function CrypkoTree({ width, height, children }) {
 CrypkoTree.propTypes = {
   width: types.number,
   height: types.number,
-  children: types.children.isRequired,
+  target: types.number.isRequired,
+  cache: types.crypkoCache.isRequired,
 };
 CrypkoTree.defaultProps = {
   width: 800,

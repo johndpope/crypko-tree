@@ -5,8 +5,6 @@ import * as cacheModule from '../modules/crypkoCache';
 import * as types from '../util/types';
 import Layout from '../components/Layout';
 import CrypkoTree from '../components/CrypkoTree';
-import CrypkoNodes from '../components/CrypkoNodes';
-import CrypkoEdges from '../components/CrypkoEdges';
 
 class CrypkoPage extends PureComponent {
   static async getInitialProps({ query }) {
@@ -20,10 +18,7 @@ class CrypkoPage extends PureComponent {
   render() {
     return (
       <Layout>
-        <CrypkoTree>
-          <CrypkoEdges />
-          <CrypkoNodes {...this.props} />
-        </CrypkoTree>
+        <CrypkoTree {...this.props} />
       </Layout>
     );
   }
