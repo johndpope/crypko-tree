@@ -13,7 +13,7 @@ function MaterialRoot(props) {
   return <div className={classes.root}>{props.children}</div>;
 }
 MaterialRoot.propTypes = {
-  classes: types.string.isRequired,
+  classes: types.classes.isRequired,
   children: types.children.isRequired,
 };
 

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import CrypkoImage from './CrypkoImage';
 import * as types from '../util/types';
 
-export default function Crypko(props) {
+export default function CrypkoNode(props) {
   const { crypko } = props;
   const { id, name, matron, sire } = crypko;
   let matronLink;
@@ -15,7 +15,7 @@ export default function Crypko(props) {
         as={`/c/${matron.id}`}
         prefetch
       >
-        <a href=".">{matron.name || `(${matron.id})`}</a>
+        <tspan>{matron.name || `(${matron.id})`}</tspan>
       </Link>
     );
     sireLink = (
@@ -24,7 +24,7 @@ export default function Crypko(props) {
         as={`/c/${sire.id}`}
         prefetch
       >
-        <a href=".">{sire.name || `(${sire.id})`}</a>
+        <tspan>{sire.name || `(${sire.id})`}</tspan>
       </Link>
     );
   } else {
@@ -33,15 +33,28 @@ export default function Crypko(props) {
   }
 
   return (
-    <div>
-      <p>Crypko: {name || `(${id})`}</p>
-      <p>Matron: {matronLink}</p>
-      <p>Sire: {sireLink}</p>
+    <g>
       <CrypkoImage crypko={crypko} />
-    </div>
+      <rect
+        style={{ stroke: '#30abef', fill: 'transparent' }}
+        x="0"
+        y="0"
+        width="192"
+        height="192"
+      />
+      <text x="200" y="40">
+        Crypko: {name || `(${id})`}
+      </text>
+      <text x="200" y="60">
+        Matron: {matronLink}
+      </text>
+      <text x="200" y="80">
+        Sire: {sireLink}
+      </text>
+    </g>
   );
 }
 
-Crypko.propTypes = {
+CrypkoNode.propTypes = {
   crypko: types.crypko.isRequired,
 };

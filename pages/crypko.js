@@ -4,35 +4,44 @@ import fetch from 'isomorphic-unfetch';
 import { URI_API } from '../util/common';
 import * as types from '../util/types';
 import Layout from '../components/Layout';
-import Crypko from '../components/Crypko';
+import CrypkoTree from '../components/CrypkoTree';
 
-const detailMemo = {};
+const detailCache = {};
 async function fetchDetail(crypkoId) {
-  if (!detailMemo[crypkoId]) {
+  if (!detailCache[crypkoId]) {
     const res = await fetch(`${URI_API}/crypkos/${crypkoId}/detail`);
     const json = await res.json();
-    detailMemo[crypkoId] = json;
+    detailCache[crypkoId] = json;
   }
-  return detailMemo[crypkoId];
+  return detailCache[crypkoId];
 }
 
 export default class CrypkoPage extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
   static async getInitialProps({ query }) {
     const { id } = query;
-    const crypkoProps = await fetchDetail(id);
-    return { crypko: crypkoProps };
+    await fetchDetail(id);
+
+    return {
+      target: Number(id),
+      cache: detailCache,
+    };
   }
 
   render() {
-    const { crypko } = this.props;
     return (
       <Layout>
-        <Crypko crypko={crypko} />
+        <CrypkoTree {...this.props} />
       </Layout>
     );
   }
 }
 
 CrypkoPage.propTypes = {
-  crypko: types.crypko.isRequired,
+  target: types.number.isRequired,
+  cache: types.crypkoCache.isRequired,
 };
