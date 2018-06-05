@@ -21,4 +21,4 @@ export const children = PropTypes.oneOfType([
 export const crypkoCache = PropTypes.objectOf(crypko);
 export const classes = PropTypes.objectOf(PropTypes.string);
 
-export const { string, number } = PropTypes;
+export const { string, number, func } = PropTypes;

@@ -1,60 +1,46 @@
 import Link from 'next/link';
+import fetch from 'isomorphic-unfetch';
 import CrypkoImage from './CrypkoImage';
 import * as types from '../util/types';
+import { URI_API } from '../util/common';
+
+async function fetchDetail(crypkoId) {
+  const res = await fetch(`${URI_API}/crypkos/${crypkoId}/detail`);
+  const json = await res.json();
+  return json;
+}
 
 export default function CrypkoNode(props) {
-  const { crypko } = props;
-  const { id, name, matron, sire } = crypko;
-  let matronLink;
-  let sireLink;
-
-  if (matron && sire) {
-    matronLink = (
-      <Link
-        href={{ pathname: '/crypko', query: { id: matron.id } }}
-        as={`/c/${matron.id}`}
-        prefetch
-      >
-        <tspan>{matron.name || `(${matron.id})`}</tspan>
-      </Link>
-    );
-    sireLink = (
-      <Link
-        href={{ pathname: '/crypko', query: { id: sire.id } }}
-        as={`/c/${sire.id}`}
-        prefetch
-      >
-        <tspan>{sire.name || `(${sire.id})`}</tspan>
-      </Link>
-    );
-  } else {
-    matronLink = '(no matron)';
-    sireLink = '(no sire)';
+  const { id, cache, addCache } = props;
+  const detail = cache[id];
+  if (!detail) {
+    fetchDetail(id).then((json) => {
+      addCache(id, json);
+    });
   }
 
   return (
-    <g>
-      <CrypkoImage crypko={crypko} />
-      <rect
-        style={{ stroke: '#30abef', fill: 'transparent' }}
-        x="0"
-        y="0"
-        width="192"
-        height="192"
-      />
-      <text x="200" y="40">
-        Crypko: {name || `(${id})`}
-      </text>
-      <text x="200" y="60">
-        Matron: {matronLink}
-      </text>
-      <text x="200" y="80">
-        Sire: {sireLink}
-      </text>
-    </g>
+    <Link href={{ pathname: '/crypko', query: { id } }} as={`/c/${id}`}>
+      <g>
+        <CrypkoImage detail={detail} />
+        <rect
+          style={{ stroke: '#30abef', fill: 'transparent' }}
+          x="0"
+          y="0"
+          width="192"
+          height="192"
+        />
+        <text x="200" y="40">
+          {(detail && detail.name) || `(${id})`}
+          {detail && `Iter${detail.iteration}`}
+        </text>
+      </g>
+    </Link>
   );
 }
 
 CrypkoNode.propTypes = {
-  crypko: types.crypko.isRequired,
+  id: types.number.isRequired,
+  cache: types.crypkoCache.isRequired,
+  addCache: types.func.isRequired,
 };

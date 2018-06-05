@@ -1,37 +1,16 @@
 import { PureComponent } from 'react';
-import fetch from 'isomorphic-unfetch';
 import { connect } from 'react-redux';
 import * as cacheModule from '../modules/crypkoCache';
 
-import { URI_API } from '../util/common';
 import * as types from '../util/types';
 import Layout from '../components/Layout';
 import CrypkoTree from '../components/CrypkoTree';
-
-const detailCache = {};
-async function fetchDetail(crypkoId) {
-  if (!detailCache[crypkoId]) {
-    const res = await fetch(`${URI_API}/crypkos/${crypkoId}/detail`);
-    const json = await res.json();
-    detailCache[crypkoId] = json;
-  }
-  return detailCache[crypkoId];
-}
+import CrypkoNodes from '../components/CrypkoNodes';
+import CrypkoEdges from '../components/CrypkoEdges';
 
 class CrypkoPage extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {};
-    console.log('constructor');
-    console.log(props);
-  }
-
-  static async getInitialProps({ store, query }) {
+  static async getInitialProps({ query }) {
     const { id } = query;
-    const detail = await fetchDetail(id);
-    console.log('getInitialProps');
-
-    store.dispatch(cacheModule.add(id, detail));
 
     return {
       target: Number(id),
@@ -39,12 +18,12 @@ class CrypkoPage extends PureComponent {
   }
 
   render() {
-    console.log('render');
-    console.log(this.props);
-
     return (
       <Layout>
-        <CrypkoTree target={this.props.target} cache={this.props.cache} />
+        <CrypkoTree>
+          <CrypkoEdges />
+          <CrypkoNodes {...this.props} />
+        </CrypkoTree>
       </Layout>
     );
   }
@@ -52,7 +31,6 @@ class CrypkoPage extends PureComponent {
 
 CrypkoPage.propTypes = {
   target: types.number.isRequired,
-  cache: types.crypkoCache.isRequired,
 };
 
 export default connect(

@@ -34,27 +34,27 @@ function getImageActualSize(size) {
 }
 
 export default function CrypkoImage(props) {
-  const { crypko, size, x, y } = props;
+  const { detail, size, x, y } = props;
   let { width, height } = props;
   if (typeof width === 'undefined' || typeof height === 'undefined') {
     ({ width, height } = getImageActualSize(size));
   }
 
-  return (
+  return detail ? (
     <image
       x={x}
       y={y}
       width={width}
       height={height}
-      xlinkHref={getImageUri(crypko, size)}
+      xlinkHref={getImageUri(detail, size)}
       alt=""
     />
-  );
+  ) : null;
 }
 
 CrypkoImage.propTypes = {
   size: types.string,
-  crypko: types.crypko.isRequired,
+  detail: types.crypko,
   x: types.number,
   y: types.number,
   width: types.number,
@@ -62,6 +62,7 @@ CrypkoImage.propTypes = {
 };
 
 CrypkoImage.defaultProps = {
+  detail: null,
   size: 'sm',
   x: 0,
   y: 0,
