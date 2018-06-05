@@ -32,7 +32,7 @@ export default function CrypkoNode(props) {
           height="192"
         />
         <text x="200" y="40">
-          {(detail && detail.name) || `(${id})`}
+          {(detail && detail.name) || `(${id})`}{' '}
           {detail && `Iter${detail.iteration}`}
         </text>
       </svg>
