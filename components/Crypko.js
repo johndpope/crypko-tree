@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import CrypkoImage from './CrypkoImage';
-import * as types from './types';
+import * as types from '../util/types';
 
 export default function Crypko(props) {
   const { crypko } = props;

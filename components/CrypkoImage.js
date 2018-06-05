@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import sha1 from 'sha1';
-import { URI_IMG, URI_IMG2, HASH_SECRET } from './common';
+import { URI_IMG, URI_IMG2, HASH_SECRET } from '../util/common';
 
 function getImageUri(crypko, size) {
   let base;

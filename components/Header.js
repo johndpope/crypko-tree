@@ -5,8 +5,8 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
-import * as types from './types';
-import { APP_NAME } from './common';
+import * as types from '../util/types';
+import { APP_NAME } from '../util/common';
 
 const styles = {
   root: {

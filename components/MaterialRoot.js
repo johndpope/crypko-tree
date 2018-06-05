@@ -1,5 +1,5 @@
 import { withStyles } from '@material-ui/core/styles';
-import * as types from './types';
+import * as types from '../util/types';
 import withRoot from '../util/withRoot';
 
 const styles = {

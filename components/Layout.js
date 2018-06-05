@@ -1,4 +1,4 @@
-import * as types from './types';
+import * as types from '../util/types';
 import MaterialRoot from './MaterialRoot';
 import Header from './Header';
 

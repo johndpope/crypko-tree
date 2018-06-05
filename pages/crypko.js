@@ -1,8 +1,8 @@
 import { PureComponent } from 'react';
 import fetch from 'isomorphic-unfetch';
 
-import { URI_API } from '../components/common';
-import * as types from '../components/types';
+import { URI_API } from '../util/common';
+import * as types from '../util/types';
 import Layout from '../components/Layout';
 import Crypko from '../components/Crypko';
 
