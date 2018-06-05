@@ -12,6 +12,7 @@ async function fetchDetail(crypkoId) {
 
 export default function CrypkoNode(props) {
   const { id, cache, addCache } = props;
+  const { x, y } = props;
   const detail = cache[id];
   if (!detail) {
     fetchDetail(id).then((json) => {
@@ -21,7 +22,7 @@ export default function CrypkoNode(props) {
 
   return (
     <Link href={{ pathname: '/crypko', query: { id } }} as={`/c/${id}`}>
-      <g>
+      <svg x={x} y={y}>
         <CrypkoImage detail={detail} />
         <rect
           style={{ stroke: '#30abef', fill: 'transparent' }}
@@ -34,7 +35,7 @@ export default function CrypkoNode(props) {
           {(detail && detail.name) || `(${id})`}
           {detail && `Iter${detail.iteration}`}
         </text>
-      </g>
+      </svg>
     </Link>
   );
 }
@@ -43,4 +44,6 @@ CrypkoNode.propTypes = {
   id: types.number.isRequired,
   cache: types.crypkoCache.isRequired,
   addCache: types.func.isRequired,
+  x: types.number.isRequired,
+  y: types.number.isRequired,
 };
