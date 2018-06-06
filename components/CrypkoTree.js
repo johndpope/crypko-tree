@@ -51,24 +51,19 @@ export default class CrypkoTree extends PureComponent {
     };
   }
 
-  getMousePosition = (e, offset) => {
+  getMousePosition = (e) => {
     const CTM = this.svgElement.getScreenCTM();
 
-    return offset
-      ? {
-          x: (e.clientX - CTM.e) / CTM.a,
-          y: (e.clientY - CTM.f) / CTM.d,
-        }
-      : {
-          x: e.clientX / CTM.a,
-          y: e.clientY / CTM.d,
-        };
+    return {
+      x: e.clientX / CTM.a,
+      y: e.clientY / CTM.d,
+    };
   };
 
   startDrag = (e) => {
     if (e.target.classList.contains('movable')) {
       this.selectedElement = e.target;
-      this.startPos = this.getMousePosition(e, false);
+      this.startPos = this.getMousePosition(e);
       this.startView = {
         x: this.state.viewX,
         y: this.state.viewY,
@@ -79,10 +74,7 @@ export default class CrypkoTree extends PureComponent {
   drag = (e) => {
     if (this.selectedElement) {
       e.preventDefault();
-      // note:
-      // don't use offset since setState() triggers viewBox update.
-      // just need relative pos
-      const pos = this.getMousePosition(e, false);
+      const pos = this.getMousePosition(e);
 
       this.setState({
         viewX: this.startView.x - pos.x + this.startPos.x,
