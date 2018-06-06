@@ -34,16 +34,15 @@ function getImageActualSize(size) {
 }
 
 export default function CrypkoImage(props) {
-  const { detail, size, x, y } = props;
-  let { width, height } = props;
-  if (typeof width === 'undefined' || typeof height === 'undefined') {
-    ({ width, height } = getImageActualSize(size));
-  }
+  const { detail, img, baseSize, x, y } = props;
+
+  getImageActualSize(img);
+
   const circle = (
     <circle
-      cx={width / 2}
-      cy={height / 2}
-      r={width / 2}
+      cx={baseSize / 2}
+      cy={baseSize / 2}
+      r={baseSize / 2}
       fill="transparent"
       stroke="url(#linear)"
     />
@@ -54,9 +53,9 @@ export default function CrypkoImage(props) {
       <image
         x={x}
         y={y}
-        width={width}
-        height={height}
-        xlinkHref={getImageUri(detail, size)}
+        width={baseSize}
+        height={baseSize}
+        xlinkHref={getImageUri(detail, img)}
         alt=""
         clipPath="url(#clip-circle)"
       />
@@ -68,19 +67,16 @@ export default function CrypkoImage(props) {
 }
 
 CrypkoImage.propTypes = {
-  size: types.string,
+  img: types.string,
   detail: types.crypko,
   x: types.number,
   y: types.number,
-  width: types.number,
-  height: types.number,
+  baseSize: types.number.isRequired,
 };
 
 CrypkoImage.defaultProps = {
   detail: null,
-  size: 'sm',
+  img: 'sm',
   x: 0,
   y: 0,
-  width: undefined,
-  height: undefined,
 };
