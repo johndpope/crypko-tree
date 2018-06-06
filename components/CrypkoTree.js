@@ -47,22 +47,28 @@ export default class CrypkoTree extends PureComponent {
     this.state = {
       viewX: 0,
       viewY: 0,
-      viewScale: 1.5,
+      viewScale: 0.5,
     };
   }
 
-  getMousePosition = (e) => {
+  getMousePosition = (e, offset) => {
     const CTM = this.svgElement.getScreenCTM();
-    return {
-      x: e.clientX / CTM.a,
-      y: e.clientY / CTM.d,
-    };
+
+    return offset
+      ? {
+          x: (e.clientX - CTM.e) / CTM.a,
+          y: (e.clientY - CTM.f) / CTM.d,
+        }
+      : {
+          x: e.clientX / CTM.a,
+          y: e.clientY / CTM.d,
+        };
   };
 
   startDrag = (e) => {
     if (e.target.classList.contains('movable')) {
       this.selectedElement = e.target;
-      this.startPos = this.getMousePosition(e);
+      this.startPos = this.getMousePosition(e, false);
       this.startView = {
         x: this.state.viewX,
         y: this.state.viewY,
@@ -73,7 +79,10 @@ export default class CrypkoTree extends PureComponent {
   drag = (e) => {
     if (this.selectedElement) {
       e.preventDefault();
-      const pos = this.getMousePosition(e);
+      // note:
+      // don't use offset since setState() triggers viewBox update.
+      // just need relative pos
+      const pos = this.getMousePosition(e, false);
 
       this.setState({
         viewX: this.startView.x - pos.x + this.startPos.x,
@@ -86,6 +95,51 @@ export default class CrypkoTree extends PureComponent {
     this.selectedElement = null;
     this.startPos = null;
     this.startView = null;
+  };
+
+  zoomIntensity = 1.1;
+  zoomIn = (x, y) => {
+    this.setState((oldState) => {
+      const oldScale = oldState.viewScale;
+      const newScale = oldScale * this.zoomIntensity;
+      const scaleDiff = newScale - oldScale;
+      return {
+        viewScale: newScale,
+        viewX: oldState.viewX + (x * scaleDiff) / (newScale * oldScale),
+        viewY: oldState.viewY + (y * scaleDiff) / (newScale * oldScale),
+      };
+    });
+  };
+  zoomOut = (x, y) => {
+    this.setState((oldState) => {
+      const oldScale = oldState.viewScale;
+      const newScale = oldScale / this.zoomIntensity;
+      const scaleDiff = newScale - oldScale;
+
+      return {
+        viewScale: newScale,
+        viewX: oldState.viewX + (x * scaleDiff) / (newScale * oldScale),
+        viewY: oldState.viewY + (y * scaleDiff) / (newScale * oldScale),
+      };
+    });
+  };
+  wheel = (e) => {
+    e.preventDefault();
+    const rect = this.svgElement.getBoundingClientRect();
+    const center = {
+      x: (rect.right - rect.left) / 2,
+      y: (rect.bottom - rect.top) / 2,
+    };
+    const cursor = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    };
+
+    if (e.deltaY > 0) {
+      this.zoomOut(cursor.x - center.x, cursor.y - center.y);
+    } else if (e.deltaY < 0) {
+      this.zoomIn(cursor.x - center.x, cursor.y - center.y);
+    }
   };
 
   render() {
@@ -109,10 +163,10 @@ export default class CrypkoTree extends PureComponent {
         }}
         style={{
           display: 'inline',
-          width: '100%',
-          height: '100%',
           cursor: 'move',
         }}
+        width={width}
+        height={height}
         viewBox={`${vx} ${vy} ${vw} ${vh}`}
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
@@ -120,6 +174,7 @@ export default class CrypkoTree extends PureComponent {
         onMouseMove={this.drag}
         onMouseUp={this.endDrag}
         onMouseLeave={this.endDrag}
+        onWheel={this.wheel}
         className="movable"
       >
         <defs>
@@ -147,8 +202,8 @@ CrypkoTree.propTypes = {
   max: types.number,
 };
 CrypkoTree.defaultProps = {
-  width: 1200,
-  height: 1000,
+  width: 800,
+  height: 800,
   min: -1,
   max: 1,
 };
