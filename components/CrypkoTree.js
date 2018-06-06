@@ -48,11 +48,13 @@ export default function CrypkoTree(props) {
   return (
     <svg
       style={{
-        overflow: 'visible',
+        overflow: 'hidden',
+        border: '1px solid gray',
+        display: 'block',
       }}
       width={width}
       height={height}
-      viewBox={`${-width / 3} ${-height / 1.2} ${width} ${height}`}
+      viewBox={`0 0 ${width} ${height}`}
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -60,13 +62,13 @@ export default function CrypkoTree(props) {
         <clipPath id="clip-circle">
           <circle cx="96" cy="96" r="96" />
         </clipPath>
-        <filter id="f1" x="-50%" y="-50%" width="200%" height="200%">
+        <filter id="f1" x="-25%" y="-25%" width="150%" height="150%">
           <feOffset result="offOut" in="SourceGraphic" dx="2" dy="2" />
           <feGaussianBlur result="blurOut" in="offOut" stdDeviation="8" />
           <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
         </filter>
       </defs>
-      <CrypkoNodes x={0} y={0} align="center" graph={graph} />
+      <CrypkoNodes x={width / 2} y={height / 2} align="center" graph={graph} />
     </svg>
   );
 }
@@ -80,8 +82,8 @@ CrypkoTree.propTypes = {
   max: types.number,
 };
 CrypkoTree.defaultProps = {
-  width: 800,
-  height: 800,
+  width: 1200,
+  height: 1000,
   min: -1,
   max: 1,
 };

@@ -45,7 +45,10 @@ export default function CrypkoNodes(props) {
   const { graph } = props;
 
   const originX = calcOriginX(props);
-  const originNode = <CrypkoNode x={originX} y={0} id={graph.id} />;
+  const originNode = (
+    // center
+    <CrypkoNode x={originX - baseSize / 2} y={-baseSize / 2} id={graph.id} />
+  );
   const sireNode = graph.sire ? (
     <CrypkoNodes
       x={calcWidth(graph.sire) / 2}
