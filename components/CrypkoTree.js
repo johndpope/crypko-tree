@@ -49,6 +49,16 @@ export default function CrypkoTree(props) {
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
     >
+      <defs>
+        <clipPath id="clip-circle">
+          <circle cx="96" cy="96" r="96" />
+        </clipPath>
+        <filter id="f1" x="-50%" y="-50%" width="200%" height="200%">
+          <feOffset result="offOut" in="SourceGraphic" dx="2" dy="2" />
+          <feGaussianBlur result="blurOut" in="offOut" stdDeviation="8" />
+          <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+        </filter>
+      </defs>
       <CrypkoNodes x={0} y={0} align="center" graph={graph} />
     </svg>
   );

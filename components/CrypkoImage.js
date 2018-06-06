@@ -39,17 +39,32 @@ export default function CrypkoImage(props) {
   if (typeof width === 'undefined' || typeof height === 'undefined') {
     ({ width, height } = getImageActualSize(size));
   }
+  const circle = (
+    <circle
+      cx={width / 2}
+      cy={height / 2}
+      r={width / 2}
+      fill="transparent"
+      stroke="gray"
+    />
+  );
 
   return detail ? (
-    <image
-      x={x}
-      y={y}
-      width={width}
-      height={height}
-      xlinkHref={getImageUri(detail, size)}
-      alt=""
-    />
-  ) : null;
+    <g filter="url(#f1)" style={{ overflow: 'visible' }}>
+      <image
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        xlinkHref={getImageUri(detail, size)}
+        alt=""
+        clipPath="url(#clip-circle)"
+      />
+      {circle}
+    </g>
+  ) : (
+    circle
+  );
 }
 
 CrypkoImage.propTypes = {

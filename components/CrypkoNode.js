@@ -31,16 +31,9 @@ function CrypkoNode(props) {
 
   return (
     <Link href={{ pathname: '/crypko', query: { id } }} as={`/c/${id}`}>
-      <svg x={x} y={y}>
+      <svg x={x} y={y} style={{ overflow: 'visible' }}>
         <CrypkoImage detail={detail} />
-        <rect
-          style={{ stroke: '#30abef', fill: 'transparent' }}
-          x="0"
-          y="0"
-          width="192"
-          height="192"
-        />
-        <text x="10" y="20">
+        <text x="10" y="210" fill="gray">
           {(detail && detail.name) || `(${id})`}{' '}
           {detail && `Iter${detail.iteration}`}
         </text>
