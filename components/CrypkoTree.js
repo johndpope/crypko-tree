@@ -45,6 +45,9 @@ export default function CrypkoTree(props) {
     max: props.max,
   });
 
+  const scale = 0.65;
+  const vw = width / scale;
+  const vh = height / scale;
   return (
     <svg
       style={{
@@ -52,7 +55,7 @@ export default function CrypkoTree(props) {
         width: '100%',
         height: '100%',
       }}
-      viewBox={`0 0 ${width} ${height}`}
+      viewBox={`${0} ${0} ${vw} ${vh}`}
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -66,7 +69,7 @@ export default function CrypkoTree(props) {
           <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
         </filter>
       </defs>
-      <CrypkoNodes x={width / 2} y={height / 2} align="center" graph={graph} />
+      <CrypkoNodes x={vw / 2} y={vh / 2} align="center" graph={graph} />
     </svg>
   );
 }
