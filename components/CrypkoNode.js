@@ -18,7 +18,7 @@ function CrypkoNode(props) {
   const detail = cache[id];
   if (!detail) {
     if (detail === null) {
-      console.log(`fetching ${id}`);
+      // console.log(`fetching ${id}`);
     }
     if (typeof detail === 'undefined') {
       console.log(`fetch ${id}`);

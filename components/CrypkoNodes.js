@@ -5,6 +5,7 @@ const padding = 10;
 const baseSize = 192;
 
 function calcWidth(graph) {
+  if (!graph) return 0;
   const upper = [];
   if (graph.sire) upper.push(calcWidth(graph.sire));
   if (graph.matron) upper.push(calcWidth(graph.matron));
@@ -49,34 +50,48 @@ export default function CrypkoNodes(props) {
     // center
     <CrypkoNode x={originX - baseSize / 2} y={-baseSize / 2} id={graph.id} />
   );
+
+  const dx =
+    Math.max(calcWidth(graph.sire), calcWidth(graph.matron)) / 2 + padding;
+  const dy = 210;
   const sireNode = graph.sire ? (
     <CrypkoNodes
-      x={calcWidth(graph.sire) / 2}
-      y={-220}
+      x={dx}
+      y={-dy}
       align={align !== 'justify' ? align : 'left'}
       graph={graph.sire}
     />
   ) : null;
   const matronNode = graph.matron ? (
     <CrypkoNodes
-      x={-calcWidth(graph.matron) / 2}
-      y={-220}
+      x={-dx}
+      y={-dy}
       align={align !== 'justify' ? align : 'right'}
       graph={graph.matron}
     />
   ) : null;
-  const derivativeNodes =
-    graph.derivatives && graph.derivatives.length
-      ? graph.derivatives.map((derivative, i, a) => (
-          <CrypkoNodes
-            key={derivative.id}
-            x={(i - (a.length - 1) / 2) * 200}
-            y={220}
-            align={align}
-            graph={derivative}
-          />
-        ))
-      : null;
+
+  let derivativeNodes = null;
+  if (graph.derivatives && graph.derivatives.length) {
+    const pos = [];
+    let sum = 0;
+    for (let i = 0; i < graph.derivatives.length; i += 1) {
+      const d = graph.derivatives[i];
+      const w = calcWidth(d);
+      sum += w + padding;
+      pos.push(sum - w / 2);
+    }
+
+    derivativeNodes = graph.derivatives.map((derivative, i) => (
+      <CrypkoNodes
+        key={derivative.id}
+        x={pos[i] - sum / 2}
+        y={dy}
+        align={align}
+        graph={derivative}
+      />
+    ));
+  }
   return (
     <svg x={x} y={y} style={{ overflow: 'visible' }}>
       {sireNode}
