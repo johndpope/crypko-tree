@@ -50,7 +50,7 @@ export default function CrypkoImage(props) {
   );
 
   return detail ? (
-    <g filter="url(#f1)" style={{ overflow: 'visible' }}>
+    <g filter="url(#f1)">
       <image
         x={x}
         y={y}

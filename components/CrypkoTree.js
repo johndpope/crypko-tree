@@ -2,11 +2,11 @@ import * as types from '../util/types';
 import CrypkoNodes from './CrypkoNodes';
 
 // TODO: add rules to filter
-function makeGraph(id, cache, depth = 0, from = 0) {
+function makeGraph({ id, cache, min, max }, depth = 0, from = 0) {
   const detail = cache[id];
 
-  const originRange = () => depth >= 0 && depth <= 2;
-  const derivativeRange = () => depth === 0;
+  const originRange = () => depth >= 0 && depth < max;
+  const derivativeRange = () => depth <= 0 && depth > min;
 
   if (!detail) {
     return {
@@ -20,24 +20,31 @@ function makeGraph(id, cache, depth = 0, from = 0) {
     detail,
     matron:
       originRange() && detail.matron && detail.matron.id !== from
-        ? makeGraph(detail.matron.id, cache, depth + 1, id)
+        ? makeGraph({ id: detail.matron.id, cache, min, max }, depth + 1, id)
         : null,
     sire:
       originRange() && detail.sire && detail.sire.id !== from
-        ? makeGraph(detail.sire.id, cache, depth + 1, id)
+        ? makeGraph({ id: detail.sire.id, cache, min, max }, depth + 1, id)
         : null,
     derivatives: derivativeRange()
       ? detail.derivatives
           .filter((derivative) => derivative.id !== from)
-          .map((derivative) => makeGraph(derivative.id, cache, depth - 1, id))
+          .map((derivative) =>
+            makeGraph({ id: derivative.id, cache, min, max }, depth - 1, id)
+          )
       : [],
   };
 }
 
 export default function CrypkoTree(props) {
-  const { width, height, target, cache } = props;
-  const graph = makeGraph(target, cache);
-  console.log(graph);
+  const { width, height } = props;
+  const graph = makeGraph({
+    id: props.id,
+    cache: props.cache,
+    min: props.min,
+    max: props.max,
+  });
+
   return (
     <svg
       style={{
@@ -67,10 +74,14 @@ export default function CrypkoTree(props) {
 CrypkoTree.propTypes = {
   width: types.number,
   height: types.number,
-  target: types.number.isRequired,
+  id: types.number.isRequired,
   cache: types.crypkoCache.isRequired,
+  min: types.number,
+  max: types.number,
 };
 CrypkoTree.defaultProps = {
   width: 800,
   height: 800,
+  min: -1,
+  max: 1,
 };

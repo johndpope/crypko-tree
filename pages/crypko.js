@@ -11,7 +11,7 @@ class CrypkoPage extends PureComponent {
     const { id } = query;
 
     return {
-      target: Number(id),
+      id: Number(id),
     };
   }
 
@@ -25,7 +25,7 @@ class CrypkoPage extends PureComponent {
 }
 
 CrypkoPage.propTypes = {
-  target: types.number.isRequired,
+  id: types.number.isRequired,
 };
 
 export default connect(
