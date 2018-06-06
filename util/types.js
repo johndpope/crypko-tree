@@ -25,4 +25,4 @@ export const graph = PropTypes.shape({
 });
 export const classes = PropTypes.objectOf(PropTypes.string);
 
-export const { string, number, func } = PropTypes;
+export const { string, number, func, bool } = PropTypes;

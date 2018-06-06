@@ -40,7 +40,7 @@ function CrypkoNode(props) {
           width="192"
           height="192"
         />
-        <text x="0" y="0">
+        <text x="10" y="20">
           {(detail && detail.name) || `(${id})`}{' '}
           {detail && `Iter${detail.iteration}`}
         </text>

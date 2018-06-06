@@ -5,8 +5,8 @@ import CrypkoNodes from './CrypkoNodes';
 function makeGraph(id, cache, depth = 0, from = 0) {
   const detail = cache[id];
 
-  const originRange = () => depth >= 0 && depth <= 1;
-  const derivativeRange = () => depth <= 0 && depth >= -1;
+  const originRange = () => depth >= 0 && depth <= 2;
+  const derivativeRange = () => depth === 0;
 
   if (!detail) {
     return {
@@ -45,10 +45,11 @@ export default function CrypkoTree(props) {
       }}
       width={width}
       height={height}
+      viewBox={`${-width / 3} ${-height / 1.2} ${width} ${height}`}
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <CrypkoNodes x={width / 2} y={height / 2} graph={graph} />
+      <CrypkoNodes x={0} y={0} align="center" graph={graph} />
     </svg>
   );
 }
