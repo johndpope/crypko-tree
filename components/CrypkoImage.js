@@ -45,7 +45,7 @@ export default function CrypkoImage(props) {
       cy={height / 2}
       r={width / 2}
       fill="transparent"
-      stroke="gray"
+      stroke="url(#linear)"
     />
   );
 

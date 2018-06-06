@@ -178,6 +178,10 @@ export default class CrypkoTree extends PureComponent {
             <feGaussianBlur result="blurOut" in="offOut" stdDeviation="8" />
             <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
           </filter>
+          <linearGradient id="linear" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#fff" />
+            <stop offset="100%" stopColor="#666" />
+          </linearGradient>
         </defs>
         <CrypkoNodes x={vw / 2} y={vh / 2} align="center" graph={graph} />
       </svg>
@@ -194,7 +198,7 @@ CrypkoTree.propTypes = {
   max: types.number,
 };
 CrypkoTree.defaultProps = {
-  width: 800,
+  width: 1200,
   height: 800,
   min: -1,
   max: 1,
