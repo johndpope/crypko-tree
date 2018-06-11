@@ -23,6 +23,11 @@ export const graph = PropTypes.shape({
   id: PropTypes.number.isRequired,
   depth: PropTypes.number.isRequired,
 });
+export const point = PropTypes.shape({
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+});
 export const classes = PropTypes.objectOf(PropTypes.string);
+export const style = PropTypes.shape();
 
 export const { string, number, func, bool } = PropTypes;

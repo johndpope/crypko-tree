@@ -40,10 +40,7 @@ function calcOriginX({ align, baseSize, x }) {
   }
 }
 
-export default function CrypkoNodes(props) {
-  const { x, y, align, baseSize, padding } = props;
-  const { graph } = props;
-  const subNodeProps = [];
+function makeSubNodeProps(graph, baseSize, padding, align) {
   const dx =
     padding +
     (1 / 2) *
@@ -53,9 +50,10 @@ export default function CrypkoNodes(props) {
       );
   const dy = baseSize + padding * 4;
 
+  const subNodeProps = [];
   if (graph.sire) {
     subNodeProps.push({
-      key: 'sire',
+      key: graph.sire.id,
       x: dx,
       y: -dy,
       align: align !== 'justify' ? align : 'left',
@@ -64,7 +62,7 @@ export default function CrypkoNodes(props) {
   }
   if (graph.matron) {
     subNodeProps.push({
-      key: 'matron',
+      key: graph.matron.id,
       x: -dx,
       y: -dy,
       align: align !== 'justify' ? align : 'right',
@@ -93,52 +91,57 @@ export default function CrypkoNodes(props) {
     );
   }
 
+  return subNodeProps;
+}
+
+export default function CrypkoNodes(props) {
+  const { ax, ay, align, baseSize, padding, edgeTo } = props;
+  const { graph } = props;
+
   const ox = calcOriginX(props);
   const oy = 0;
-  const subNodes = subNodeProps.map((p) => <CrypkoNodes {...p} />);
-  const edges = subNodeProps.map((p) => {
-    const d = `M ${ox},${oy} v ${(p.y - oy) / 2} h ${p.x - ox} v ${(p.y - oy) /
-      2}`;
-    return (
-      <path
-        d={d}
-        stroke="gray"
-        strokeWidth="5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeDasharray="0,10"
-        fill="none"
-      />
-    );
-  });
-
-  return (
-    <svg x={x} y={y} style={{ overflow: 'visible' }}>
-      {edges}
-      {subNodes}
-      <CrypkoNode
-        x={ox}
-        y={oy}
-        id={graph.id}
-        baseSize={baseSize}
-        padding={padding}
-      />
-      {props.debug ? <circle cx="0" cy="0" r="5" /> : null}
-    </svg>
+  const originNode = (
+    <CrypkoNode
+      key={graph.id}
+      x={ox}
+      y={oy}
+      ax={ax + ox}
+      ay={ay + oy}
+      id={graph.id}
+      baseSize={baseSize}
+      padding={padding}
+      edgeTo={edgeTo}
+    />
   );
+  const subNodes = makeSubNodeProps(graph, baseSize, padding, align)
+    .map((p) =>
+      CrypkoNodes({
+        ...p,
+        ax: ax + p.x,
+        ay: ay + p.y,
+        baseSize,
+        padding,
+        edgeTo: { x: ax + ox, y: ay + oy },
+      })
+    )
+    .reduce((prev, cur) => [...prev, ...cur], []);
+
+  return [...subNodes, originNode];
 }
 CrypkoNodes.propTypes = {
   x: types.number.isRequired,
   y: types.number.isRequired,
+  ax: types.number.isRequired,
+  ay: types.number.isRequired,
   graph: types.graph.isRequired,
   align: types.string,
   baseSize: types.number,
   padding: types.number,
-  debug: types.bool,
+  edgeTo: types.point,
 };
 CrypkoNodes.defaultProps = {
   align: 'center',
   padding: 10,
   baseSize: 192,
-  debug: false,
+  edgeTo: null,
 };

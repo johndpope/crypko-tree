@@ -183,7 +183,14 @@ export default class CrypkoTree extends PureComponent {
             <stop offset="100%" stopColor="#666" />
           </linearGradient>
         </defs>
-        <CrypkoNodes x={vw / 2} y={vh / 2} align="center" graph={graph} />
+        <CrypkoNodes
+          x={vw / 2}
+          y={vh / 2}
+          ax={vw / 2}
+          ay={vh / 2}
+          align="center"
+          graph={graph}
+        />
       </svg>
     );
   }
