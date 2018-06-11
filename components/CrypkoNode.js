@@ -14,23 +14,16 @@ async function fetchDetail(crypkoId) {
 }
 
 class CrypkoNode extends PureComponent {
-  componentWillMount = () => {
+  state = {
+    prevX: undefined,
+    prevY: undefined,
+  };
+
+  componentDidMount = () => {
+    const { id, addCache, fetchCache } = this.props;
     console.log(`mount: ${this.props.id}`);
-  };
-  componentWillReceiveProps = (nextProps) => {
-    const prev = this.props;
-    const next = nextProps;
-    console.log(`update: ${this.props.id}`, prev, next);
-  };
-  componentWillUnmount = () => {
-    console.log(`unmount :${this.props.id}`);
-  };
 
-  render() {
-    const { id, cache, addCache, fetchCache } = this.props;
-    const { ax, ay, baseSize, padding, edgeTo } = this.props;
-
-    const detail = cache[id];
+    const detail = this.getDetail();
     if (!detail) {
       if (detail === null) {
         // console.log(`fetching ${id}`);
@@ -43,6 +36,36 @@ class CrypkoNode extends PureComponent {
         });
       }
     }
+  };
+  static getDerivedStateFromProps = (props, prevState) => {
+    const px = prevState.prevX;
+    const py = prevState.prevY;
+    if (typeof px !== 'undefined' && typeof py !== 'undefined') {
+      if (px !== props.ax || py !== props.ay) {
+        console.log(`update: ${props.id}`, {
+          dx: props.ax - px,
+          dy: props.ay - py,
+        });
+      }
+    }
+    return {
+      prevX: props.ax,
+      prevY: props.ay,
+    };
+  };
+
+  componentWillUnmount = () => {
+    console.log(`unmount :${this.props.id}`);
+  };
+
+  getDetail = () => {
+    const { id, cache } = this.props;
+    return cache[id];
+  };
+
+  render() {
+    const { id, ax, ay, baseSize, padding, edgeTo } = this.props;
+    const detail = this.getDetail();
 
     const cx = ax - baseSize / 2;
     const cy = ay - baseSize / 2;
@@ -69,15 +92,15 @@ class CrypkoNode extends PureComponent {
         <Link href={{ pathname: '/crypko', query: { id } }} as={`/c/${id}`}>
           <svg x={cx} y={cy} style={{ overflow: 'visible', cursor: 'pointer' }}>
             <CrypkoImage detail={detail} baseSize={baseSize} />
-        <text
+            <text
               x={0}
               y={baseSize + padding * 2}
-          fill="gray"
-          style={{ cursor: 'text' }}
-        >
-          {(detail && detail.name) || `(${id})`}{' '}
-          {detail && `Iter${detail.iteration}`}
-        </text>
+              fill="gray"
+              style={{ cursor: 'text' }}
+            >
+              {(detail && detail.name) || `(${id})`}{' '}
+              {detail && `Iter${detail.iteration}`}
+            </text>
           </svg>
         </Link>
       </>

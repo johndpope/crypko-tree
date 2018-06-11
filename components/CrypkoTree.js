@@ -51,6 +51,17 @@ export default class CrypkoTree extends PureComponent {
     };
   }
 
+  static getDerivedStateFromProps(props) {
+    return {
+      graph: makeGraph({
+        id: props.id,
+        cache: props.cache,
+        min: props.min,
+        max: props.max,
+      }),
+    };
+  }
+
   getMousePosition = (e) => {
     const CTM = this.svgElement.getScreenCTM();
 
@@ -136,18 +147,12 @@ export default class CrypkoTree extends PureComponent {
 
   render() {
     const { width, height } = this.props;
-    const graph = makeGraph({
-      id: this.props.id,
-      cache: this.props.cache,
-      min: this.props.min,
-      max: this.props.max,
-    });
 
-    const vx = this.state.viewX;
-    const vy = this.state.viewY;
-    const scale = this.state.viewScale;
-    const vw = width / scale;
-    const vh = height / scale;
+    const { graph, viewScale, viewX, viewY } = this.state;
+    const vw = width / viewScale;
+    const vh = height / viewScale;
+    const vx = viewX - vw / 2;
+    const vy = viewY - vh / 2;
     return (
       <svg
         ref={(svg) => {
@@ -183,14 +188,7 @@ export default class CrypkoTree extends PureComponent {
             <stop offset="100%" stopColor="#666" />
           </linearGradient>
         </defs>
-        <CrypkoNodes
-          x={vw / 2}
-          y={vh / 2}
-          ax={vw / 2}
-          ay={vh / 2}
-          align="center"
-          graph={graph}
-        />
+        <CrypkoNodes x={0} y={0} ax={0} ay={0} align="center" graph={graph} />
       </svg>
     );
   }
