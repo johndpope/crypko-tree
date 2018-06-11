@@ -77,8 +77,11 @@ function makeSubNodeProps(graph, baseSize, padding, align) {
     for (let i = 0; i < graph.derivatives.length; i += 1) {
       const d = graph.derivatives[i];
       const w = calcWidth(d, baseSize, padding);
-      sum += w + padding;
+      sum += w;
       pos.push(sum - w / 2);
+      if (i < graph.derivatives.length - 1) {
+        sum += padding;
+      }
     }
 
     subNodeProps.push(
