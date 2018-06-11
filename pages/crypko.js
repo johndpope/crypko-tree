@@ -18,7 +18,7 @@ class CrypkoPage extends PureComponent {
   render() {
     return (
       <Layout>
-        <CrypkoTree {...this.props} min={-2} max={2} />
+        <CrypkoTree {...this.props} min={-2} max={3} />
       </Layout>
     );
   }

@@ -51,15 +51,31 @@ export default class CrypkoTree extends PureComponent {
     };
   }
 
-  static getDerivedStateFromProps(props) {
-    return {
-      graph: makeGraph({
-        id: props.id,
-        cache: props.cache,
-        min: props.min,
-        max: props.max,
-      }),
+  static getDerivedStateFromProps(props, prevState) {
+    const graphProps = {
+      id: props.id,
+      cache: props.cache,
+      min: props.min,
+      max: props.max,
     };
+    const diffState = {
+      graphProps,
+    };
+    const prev = prevState.graphProps;
+    if (prev) {
+      if (
+        prev.id !== props.id ||
+        prev.min !== props.min ||
+        prev.max !== props.max ||
+        Object.keys(prev.cache).some((k) => prev.cache[k] !== props.cache[k])
+      ) {
+        diffState.graph = makeGraph(graphProps);
+      }
+    } else {
+      diffState.graph = makeGraph(graphProps);
+    }
+
+    return diffState;
   }
 
   getMousePosition = (e) => {

@@ -45,7 +45,7 @@ class CrypkoNode extends PureComponent {
   };
 
   render() {
-    const { id, ax, ay, baseSize, padding, edgeTo } = this.props;
+    const { id, ax, ay, baseSize, padding, edgeTo, style } = this.props;
     const detail = this.getDetail();
 
     const cx = ax - baseSize / 2;
@@ -63,6 +63,7 @@ class CrypkoNode extends PureComponent {
           strokeLinejoin="round"
           strokeDasharray="0,10"
           fill="none"
+          style={style}
         />
       );
     }
@@ -70,7 +71,10 @@ class CrypkoNode extends PureComponent {
     return (
       <>
         {edge}
-        <Motion style={{ x: spring(cx), y: spring(cy) }}>
+        <Motion
+          defaultStyle={{ x: 0, y: 0 }}
+          style={{ x: spring(cx), y: spring(cy) }}
+        >
           {({ x, y }) => (
             <Link href={{ pathname: '/crypko', query: { id } }} as={`/c/${id}`}>
               <svg
@@ -79,6 +83,7 @@ class CrypkoNode extends PureComponent {
                 style={{
                   overflow: 'visible',
                   cursor: 'pointer',
+                  ...style,
                 }}
               >
                 <CrypkoImage detail={detail} baseSize={baseSize} />
@@ -110,9 +115,11 @@ CrypkoNode.propTypes = {
   baseSize: types.number.isRequired,
   padding: types.number.isRequired,
   edgeTo: types.point,
+  style: types.style,
 };
 CrypkoNode.defaultProps = {
   edgeTo: null,
+  style: {},
 };
 
 export default connect(

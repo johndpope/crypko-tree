@@ -1,4 +1,6 @@
 import { pure } from 'recompose';
+import { TransitionMotion, spring } from 'react-motion';
+
 import CrypkoNode from './CrypkoNode';
 import * as types from '../util/types';
 
@@ -98,28 +100,26 @@ function makeSubNodeProps(graph, baseSize, padding, align) {
   return subNodeProps;
 }
 
-function CrypkoNodes(props) {
+function makeNodes(props) {
   const { ax, ay, align, baseSize, padding, edgeTo } = props;
   const { graph } = props;
 
   const ox = calcOriginX(props);
   const oy = 0;
-  const originNode = (
-    <CrypkoNode
-      key={graph.id}
-      x={ox}
-      y={oy}
-      ax={ax + ox}
-      ay={ay + oy}
-      id={graph.id}
-      baseSize={baseSize}
-      padding={padding}
-      edgeTo={edgeTo}
-    />
-  );
+  const originNode = {
+    key: graph.id,
+    x: ox,
+    y: oy,
+    ax: ax + ox,
+    ay: ay + oy,
+    id: graph.id,
+    baseSize,
+    padding,
+    edgeTo,
+  };
   const subNodes = makeSubNodeProps(graph, baseSize, padding, align)
     .map((p) =>
-      CrypkoNodes({
+      makeNodes({
         ...p,
         ax: ax + p.x,
         ay: ay + p.y,
@@ -132,6 +132,39 @@ function CrypkoNodes(props) {
 
   return [...subNodes, originNode];
 }
+
+function willLeave() {
+  return {
+    opacity: spring(0),
+  };
+}
+
+function CrypkoNodes(props) {
+  const nodes = makeNodes(props);
+
+  if (props.useFade) {
+    return (
+      <TransitionMotion
+        willLeave={willLeave}
+        styles={nodes.map((node) => ({
+          key: node.key,
+          style: { opacity: 1.0 },
+          data: node,
+        }))}
+      >
+        {(styles) => (
+          <g>
+            {styles.map((config) => (
+              <CrypkoNode {...config.data} style={config.style} />
+            ))}
+          </g>
+        )}
+      </TransitionMotion>
+    );
+  }
+  return nodes.map((node) => <CrypkoNode {...node} />);
+}
+
 CrypkoNodes.propTypes = {
   x: types.number.isRequired,
   y: types.number.isRequired,
