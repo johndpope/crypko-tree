@@ -1,3 +1,4 @@
+import { pure } from 'recompose';
 import CrypkoNode from './CrypkoNode';
 import * as types from '../util/types';
 
@@ -94,7 +95,7 @@ function makeSubNodeProps(graph, baseSize, padding, align) {
   return subNodeProps;
 }
 
-export default function CrypkoNodes(props) {
+function CrypkoNodes(props) {
   const { ax, ay, align, baseSize, padding, edgeTo } = props;
   const { graph } = props;
 
@@ -145,3 +146,5 @@ CrypkoNodes.defaultProps = {
   baseSize: 192,
   edgeTo: null,
 };
+
+export default pure(CrypkoNodes);

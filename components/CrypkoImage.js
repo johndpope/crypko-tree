@@ -1,3 +1,4 @@
+import { pure } from 'recompose';
 import sha1 from 'sha1';
 import * as types from '../util/types';
 import { URI_IMG, URI_IMG2, HASH_SECRET } from '../util/common';
@@ -33,7 +34,7 @@ function getImageActualSize(size) {
   }
 }
 
-export default function CrypkoImage(props) {
+function CrypkoImage(props) {
   const { detail, img, baseSize } = props;
 
   getImageActualSize(img);
@@ -69,14 +70,12 @@ export default function CrypkoImage(props) {
 CrypkoImage.propTypes = {
   img: types.string,
   detail: types.crypko,
-  x: types.number,
-  y: types.number,
   baseSize: types.number.isRequired,
 };
 
 CrypkoImage.defaultProps = {
   detail: null,
   img: 'sm',
-  x: 0,
-  y: 0,
 };
+
+export default pure(CrypkoImage);
