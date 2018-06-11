@@ -1,7 +1,9 @@
 import { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import Link from 'next/link';
 import fetch from 'isomorphic-unfetch';
-import { connect } from 'react-redux';
+import { Motion, spring } from 'react-motion';
+
 import * as cacheModule from '../modules/crypkoCache';
 import CrypkoImage from './CrypkoImage';
 import * as types from '../util/types';
@@ -14,14 +16,9 @@ async function fetchDetail(crypkoId) {
 }
 
 class CrypkoNode extends PureComponent {
-  state = {
-    prevX: undefined,
-    prevY: undefined,
-  };
-
   componentDidMount = () => {
     const { id, addCache, fetchCache } = this.props;
-    console.log(`mount: ${this.props.id}`);
+    // console.log(`mount: ${this.props.id}`);
 
     const detail = this.getDetail();
     if (!detail) {
@@ -29,7 +26,7 @@ class CrypkoNode extends PureComponent {
         // console.log(`fetching ${id}`);
       }
       if (typeof detail === 'undefined') {
-        console.log(`fetch ${id}`);
+        // console.log(`fetch ${id}`);
         fetchCache(id);
         fetchDetail(id, fetchCache).then((json) => {
           addCache(id, json);
@@ -37,25 +34,9 @@ class CrypkoNode extends PureComponent {
       }
     }
   };
-  static getDerivedStateFromProps = (props, prevState) => {
-    const px = prevState.prevX;
-    const py = prevState.prevY;
-    if (typeof px !== 'undefined' && typeof py !== 'undefined') {
-      if (px !== props.ax || py !== props.ay) {
-        console.log(`update: ${props.id}`, {
-          dx: props.ax - px,
-          dy: props.ay - py,
-        });
-      }
-    }
-    return {
-      prevX: props.ax,
-      prevY: props.ay,
-    };
-  };
 
   componentWillUnmount = () => {
-    console.log(`unmount :${this.props.id}`);
+    // console.log(`unmount :${this.props.id}`);
   };
 
   getDetail = () => {
@@ -89,20 +70,31 @@ class CrypkoNode extends PureComponent {
     return (
       <>
         {edge}
-        <Link href={{ pathname: '/crypko', query: { id } }} as={`/c/${id}`}>
-          <svg x={cx} y={cy} style={{ overflow: 'visible', cursor: 'pointer' }}>
-            <CrypkoImage detail={detail} baseSize={baseSize} />
-            <text
-              x={0}
-              y={baseSize + padding * 2}
-              fill="gray"
-              style={{ cursor: 'text' }}
-            >
-              {(detail && detail.name) || `(${id})`}{' '}
-              {detail && `Iter${detail.iteration}`}
-            </text>
-          </svg>
-        </Link>
+        <Motion style={{ x: spring(cx), y: spring(cy) }}>
+          {({ x, y }) => (
+            <Link href={{ pathname: '/crypko', query: { id } }} as={`/c/${id}`}>
+              <svg
+                x={x}
+                y={y}
+                style={{
+                  overflow: 'visible',
+                  cursor: 'pointer',
+                }}
+              >
+                <CrypkoImage detail={detail} baseSize={baseSize} />
+                <text
+                  x={0}
+                  y={baseSize + padding * 2}
+                  fill="gray"
+                  style={{ cursor: 'text' }}
+                >
+                  {(detail && detail.name) || `(${id})`}{' '}
+                  {detail && `Iter${detail.iteration}`}
+                </text>
+              </svg>
+            </Link>
+          )}
+        </Motion>
       </>
     );
   }
