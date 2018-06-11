@@ -107,7 +107,6 @@ function makeNodes(props) {
   const ox = calcOriginX(props);
   const oy = 0;
   const originNode = {
-    key: graph.id,
     x: ox,
     y: oy,
     ax: ax + ox,
@@ -133,14 +132,23 @@ function makeNodes(props) {
   return [...subNodes, originNode];
 }
 
+function addUniqueKey(nodes) {
+  return nodes.map((node, i, a) => {
+    const dupCount = a.slice(0, i).filter(({ id }) => id === node.id).length;
+    const postfix = Array(dupCount + 1).join('_');
+    return { ...node, key: `${node.id}${postfix}` };
+  });
+}
+
 function CrypkoNodes(props) {
   const nodes = makeNodes(props);
+  const nodesWithKey = addUniqueKey(nodes);
 
   if (props.useFade) {
     return (
       <TransitionMotion
         willLeave={() => ({ opacity: spring(0) })}
-        styles={nodes.map((node) => ({
+        styles={nodesWithKey.map((node) => ({
           key: node.key,
           style: { opacity: 1.0 },
           data: node,
@@ -156,7 +164,7 @@ function CrypkoNodes(props) {
       </TransitionMotion>
     );
   }
-  return nodes.map((node) => <CrypkoNode {...node} />);
+  return nodesWithKey.map((node) => <CrypkoNode {...node} />);
 }
 
 CrypkoNodes.propTypes = {
