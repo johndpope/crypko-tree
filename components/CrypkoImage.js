@@ -34,7 +34,7 @@ function getImageActualSize(size) {
 }
 
 export default function CrypkoImage(props) {
-  const { detail, img, baseSize, x, y, style } = props;
+  const { detail, img, baseSize } = props;
 
   getImageActualSize(img);
 
@@ -49,7 +49,7 @@ export default function CrypkoImage(props) {
   );
 
   return detail ? (
-    <svg x={x} y={y} filter="url(#f1)" style={style}>
+    <g filter="url(#f1)">
       <image
         x={0}
         y={0}
@@ -60,7 +60,7 @@ export default function CrypkoImage(props) {
         clipPath="url(#clip-circle)"
       />
       {circle}
-    </svg>
+    </g>
   ) : (
     circle
   );
@@ -72,7 +72,6 @@ CrypkoImage.propTypes = {
   x: types.number,
   y: types.number,
   baseSize: types.number.isRequired,
-  style: types.style,
 };
 
 CrypkoImage.defaultProps = {
@@ -80,5 +79,4 @@ CrypkoImage.defaultProps = {
   img: 'sm',
   x: 0,
   y: 0,
-  style: {},
 };

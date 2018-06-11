@@ -67,23 +67,19 @@ class CrypkoNode extends PureComponent {
       <>
         {edge}
         <Link href={{ pathname: '/crypko', query: { id } }} as={`/c/${id}`}>
-          <CrypkoImage
-            x={cx}
-            y={cy}
-            detail={detail}
-            baseSize={baseSize}
-            style={{ cursor: 'pointer', overflow: 'visible' }}
-          />
-        </Link>
+          <svg x={cx} y={cy} style={{ overflow: 'visible', cursor: 'pointer' }}>
+            <CrypkoImage detail={detail} baseSize={baseSize} />
         <text
-          x={cx}
-          y={cy + baseSize + padding * 2}
+              x={0}
+              y={baseSize + padding * 2}
           fill="gray"
           style={{ cursor: 'text' }}
         >
           {(detail && detail.name) || `(${id})`}{' '}
           {detail && `Iter${detail.iteration}`}
         </text>
+          </svg>
+        </Link>
       </>
     );
   }
