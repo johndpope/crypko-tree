@@ -133,19 +133,13 @@ function makeNodes(props) {
   return [...subNodes, originNode];
 }
 
-function willLeave() {
-  return {
-    opacity: spring(0),
-  };
-}
-
 function CrypkoNodes(props) {
   const nodes = makeNodes(props);
 
   if (props.useFade) {
     return (
       <TransitionMotion
-        willLeave={willLeave}
+        willLeave={() => ({ opacity: spring(0) })}
         styles={nodes.map((node) => ({
           key: node.key,
           style: { opacity: 1.0 },
@@ -175,12 +169,14 @@ CrypkoNodes.propTypes = {
   baseSize: types.number,
   padding: types.number,
   edgeTo: types.point,
+  useFade: types.bool,
 };
 CrypkoNodes.defaultProps = {
   align: 'center',
   padding: 10,
   baseSize: 192,
   edgeTo: null,
+  useFade: false,
 };
 
 export default pure(CrypkoNodes);
