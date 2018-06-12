@@ -35,6 +35,7 @@
     "recompose": "^0.27.1",
     "redux": "^4.0.0",
     "sha1": "^1.1.1",
+    "shallow-equal-props": "^1.0.2",
     "styled-jsx": "^2.2.6"
   },
   "devDependencies": {

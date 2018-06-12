@@ -1,43 +1,7 @@
 import { PureComponent } from 'react';
 import * as types from '../util/types';
-import CrypkoNodes from './CrypkoNodes';
 
-// TODO: add rules to filter
-function makeGraph({ id, cache, min, max }, depth = 0, from = 0) {
-  const detail = cache[id];
-
-  const originRange = () => depth >= 0 && depth < max;
-  const derivativeRange = () => depth <= 0 && depth > min;
-
-  if (!detail) {
-    return {
-      id,
-      depth,
-    };
-  }
-  return {
-    id,
-    depth,
-    detail,
-    matron:
-      originRange() && detail.matron && detail.matron.id !== from
-        ? makeGraph({ id: detail.matron.id, cache, min, max }, depth + 1, id)
-        : null,
-    sire:
-      originRange() && detail.sire && detail.sire.id !== from
-        ? makeGraph({ id: detail.sire.id, cache, min, max }, depth + 1, id)
-        : null,
-    derivatives: derivativeRange()
-      ? detail.derivatives
-          .filter((derivative) => derivative.id !== from)
-          .map((derivative) =>
-            makeGraph({ id: derivative.id, cache, min, max }, depth - 1, id)
-          )
-      : [],
-  };
-}
-
-export default class CrypkoTree extends PureComponent {
+class CrypkoTree extends PureComponent {
   constructor(props) {
     super(props);
     this.selectedElement = null;
@@ -49,33 +13,6 @@ export default class CrypkoTree extends PureComponent {
       viewY: 0,
       viewScale: 0.5,
     };
-  }
-
-  static getDerivedStateFromProps(props, prevState) {
-    const graphProps = {
-      id: props.id,
-      cache: props.cache,
-      min: props.min,
-      max: props.max,
-    };
-    const diffState = {
-      graphProps,
-    };
-    const prev = prevState.graphProps;
-    if (prev) {
-      if (
-        prev.id !== props.id ||
-        prev.min !== props.min ||
-        prev.max !== props.max ||
-        Object.keys(prev.cache).some((k) => prev.cache[k] !== props.cache[k])
-      ) {
-        diffState.graph = makeGraph(graphProps);
-      }
-    } else {
-      diffState.graph = makeGraph(graphProps);
-    }
-
-    return diffState;
   }
 
   getMousePosition = (e) => {
@@ -162,13 +99,15 @@ export default class CrypkoTree extends PureComponent {
   };
 
   render() {
-    const { width, height } = this.props;
+    console.warn('Tree');
+    const { children, width, height } = this.props;
+    const { viewScale, viewX, viewY } = this.state;
 
-    const { graph, viewScale, viewX, viewY } = this.state;
     const vw = width / viewScale;
     const vh = height / viewScale;
     const vx = viewX - vw / 2;
     const vy = viewY - vh / 2;
+
     return (
       <svg
         ref={(svg) => {
@@ -204,23 +143,20 @@ export default class CrypkoTree extends PureComponent {
             <stop offset="100%" stopColor="#666" />
           </linearGradient>
         </defs>
-        <CrypkoNodes x={0} y={0} ax={0} ay={0} align="center" graph={graph} />
+        {children}
       </svg>
     );
   }
 }
 
 CrypkoTree.propTypes = {
+  children: types.children.isRequired,
   width: types.number,
   height: types.number,
-  id: types.number.isRequired,
-  cache: types.crypkoCache.isRequired,
-  min: types.number,
-  max: types.number,
 };
 CrypkoTree.defaultProps = {
   width: 1200,
   height: 800,
-  min: -1,
-  max: 1,
 };
+
+export default CrypkoTree;

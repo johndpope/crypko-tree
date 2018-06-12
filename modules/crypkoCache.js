@@ -22,18 +22,24 @@ export function add(crypkoId, crypkoDetail) {
   };
 }
 
-const initialState = {};
+const initialState = {
+  details: {},
+  fetching: {},
+};
 export default function reducer(state = initialState, action) {
+  const { details, fetching } = state;
   switch (action.type) {
-    case FETCH: // TODO
+    case FETCH:
       return {
         ...state,
-        [action.payload.id]: action.payload.data,
+        fetching: { ...fetching, [action.payload.id]: true },
+        details: { ...details, [action.payload.id]: action.payload.data },
       };
     case ADD:
       return {
         ...state,
-        [action.payload.id]: action.payload.data,
+        fetching: { ...fetching, [action.payload.id]: false },
+        details: { ...details, [action.payload.id]: action.payload.data },
       };
     default:
       break;

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-export const parent = PropTypes.shape({
+export const crypkoBase = PropTypes.shape({
   id: PropTypes.number.isRequired,
   name: PropTypes.string,
 });
@@ -10,8 +10,8 @@ export const crypko = PropTypes.shape({
   attrs: PropTypes.string.isRequired,
   noise: PropTypes.string.isRequired,
   name: PropTypes.string,
-  matron: parent,
-  sire: parent,
+  matron: crypkoBase,
+  sire: crypkoBase,
 });
 
 export const children = PropTypes.oneOfType([
@@ -19,6 +19,7 @@ export const children = PropTypes.oneOfType([
   PropTypes.node,
 ]);
 export const crypkoCache = PropTypes.objectOf(crypko);
+export const crypkoFetching = PropTypes.objectOf(PropTypes.bool);
 export const graph = PropTypes.shape({
   id: PropTypes.number.isRequired,
   depth: PropTypes.number.isRequired,

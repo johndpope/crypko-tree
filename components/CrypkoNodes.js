@@ -101,7 +101,7 @@ function makeSubNodeProps(graph, baseSize, padding, align) {
 }
 
 function makeNodes(props) {
-  const { ax, ay, align, baseSize, padding, edgeTo } = props;
+  const { ax, ay, align, baseSize, padding, edgeX, edgeY } = props;
   const { graph } = props;
 
   const ox = calcOriginX(props);
@@ -112,9 +112,11 @@ function makeNodes(props) {
     ax: ax + ox,
     ay: ay + oy,
     id: graph.id,
+    detail: graph.detail,
     baseSize,
     padding,
-    edgeTo,
+    edgeX,
+    edgeY,
   };
   const subNodes = makeSubNodeProps(graph, baseSize, padding, align)
     .map((p) =>
@@ -124,7 +126,8 @@ function makeNodes(props) {
         ay: ay + p.y,
         baseSize,
         padding,
-        edgeTo: { x: ax + ox, y: ay + oy },
+        edgeX: ax + ox,
+        edgeY: ay + oy,
       })
     )
     .reduce((prev, cur) => [...prev, ...cur], []);
@@ -141,6 +144,7 @@ function addUniqueKey(nodes) {
 }
 
 function CrypkoNodes(props) {
+  console.warn('Nodes');
   const nodes = makeNodes(props);
   const nodesWithKey = addUniqueKey(nodes);
 
@@ -168,22 +172,28 @@ function CrypkoNodes(props) {
 }
 
 CrypkoNodes.propTypes = {
-  x: types.number.isRequired,
-  y: types.number.isRequired,
-  ax: types.number.isRequired,
-  ay: types.number.isRequired,
+  x: types.number,
+  y: types.number,
+  ax: types.number,
+  ay: types.number,
   graph: types.graph.isRequired,
   align: types.string,
   baseSize: types.number,
   padding: types.number,
-  edgeTo: types.point,
+  edgeX: types.number,
+  edgeY: types.number,
   useFade: types.bool,
 };
 CrypkoNodes.defaultProps = {
+  x: 0,
+  y: 0,
+  ax: 0,
+  ay: 0,
   align: 'center',
   padding: 10,
   baseSize: 192,
-  edgeTo: null,
+  edgeX: NaN,
+  edgeY: NaN,
   useFade: false,
 };
 
