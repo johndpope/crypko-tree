@@ -9,51 +9,62 @@ import CrypkoTree from '../components/CrypkoTree';
 import * as types from '../util/types';
 import { URI_API } from '../util/common';
 
-function makeGraph({ id, cache, min, max }, depth = 0, from = 0) {
+function makeGraph({ id, cache, min, max, base = null }, depth = 0, from = 0) {
   const detail = cache[id];
-
   const originRange = () => depth >= 0 && depth < max;
   const derivativeRange = () => depth <= 0 && depth > min;
 
-  if (!detail) {
-    return {
-      id,
-      depth,
-    };
-  }
-  return {
+  const graph = {
     id,
     depth,
-    detail,
-    matron:
-      originRange() && detail.matron && detail.matron.id !== from
-        ? makeGraph({ id: detail.matron.id, cache, min, max }, depth + 1, id)
-        : null,
-    sire:
-      originRange() && detail.sire && detail.sire.id !== from
-        ? makeGraph({ id: detail.sire.id, cache, min, max }, depth + 1, id)
-        : null,
-    derivatives: derivativeRange()
-      ? detail.derivatives
-          .filter((derivative) => derivative.id !== from)
-          .map((derivative) =>
-            makeGraph({ id: derivative.id, cache, min, max }, depth - 1, id)
-          )
-      : [],
+    detail: detail || base,
+    needFetch: originRange() || derivativeRange(),
+    isCached: !!detail,
   };
+  if (detail) {
+    if (originRange() && detail.matron && detail.matron.id !== from) {
+      graph.matron = makeGraph(
+        { id: detail.matron.id, cache, min, max, base: detail.matron },
+        depth + 1,
+        id
+      );
+    }
+    if (originRange() && detail.sire && detail.sire.id !== from) {
+      graph.sire = makeGraph(
+        { id: detail.sire.id, cache, min, max, base: detail.sire },
+        depth + 1,
+        id
+      );
+    }
+    if (derivativeRange()) {
+      graph.derivatives = detail.derivatives
+        .filter((derivative) => derivative.id !== from)
+        .map((derivative) =>
+          makeGraph(
+            { id: derivative.id, cache, min, max, base: derivative },
+            depth - 1,
+            id
+          )
+        );
+    } else {
+      graph.derivatives = [];
+    }
+  }
+  return graph;
 }
 
-function blanks(graph) {
-  const _ = blanks;
+function needFetchNodes(graph) {
+  const _ = needFetchNodes;
   if (graph) {
-    if (graph.detail) {
+    if (graph.isCached) {
       return [
         ..._(graph.matron),
         ..._(graph.sire),
         ...graph.derivatives.reduce((prev, d) => [...prev, ..._(d)], []),
       ];
+    } else if (graph.needFetch) {
+      return [graph.id];
     }
-    return [graph.id];
   }
   return [];
 }
@@ -86,10 +97,10 @@ class CrypkoPage extends Component {
     return false;
   };
   componentDidUpdate = () => {
-    const unfetch = blanks(this.state.graph).filter(
+    const unfetchNodes = needFetchNodes(this.state.graph).filter(
       (id) => !this.props.fetching[id]
     );
-    this.props.fetchCache(unfetch).then();
+    this.props.fetchCache(unfetchNodes).then();
   };
 
   static async getInitialProps({ query }) {
@@ -97,7 +108,7 @@ class CrypkoPage extends Component {
 
     return {
       id: Number(id),
-      min: -2,
+      min: -1,
       max: 2,
     };
   }
@@ -124,6 +135,7 @@ CrypkoPage.propTypes = {
 };
 
 async function apiDetail(crypkoId) {
+  console.log(`fetch ${crypkoId}`);
   const res = await fetch(`${URI_API}/crypkos/${crypkoId}/detail`);
   const json = await res.json();
   return json;
