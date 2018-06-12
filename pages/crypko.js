@@ -112,14 +112,15 @@ class CrypkoPage extends Component {
 
   static async getInitialProps({ query, store, isServer }) {
     const { id } = query;
+
     if (!isServer && !store.getState().details[id]) {
       const json = await apiDetail(id);
       store.dispatch(cacheModule.add(id, json));
     }
     return {
       id: Number(id),
-      min: -1,
-      max: 2,
+      min: -2,
+      max: 3,
     };
   }
 
