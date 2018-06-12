@@ -79,6 +79,8 @@ function needFetchNodes(graph) {
 class CrypkoPage extends Component {
   state = {
     graph: {},
+    width: 0,
+    height: 0,
   };
   static getDerivedStateFromProps = (props) => {
     const graphProps = {
@@ -92,7 +94,10 @@ class CrypkoPage extends Component {
     };
   };
   componentDidMount = () => {
-    this.componentDidUpdate();
+    window.addEventListener('resize', this.updateDimensions);
+    this.updateDimensions();
+
+    this.fetchDetail();
   };
   shouldComponentUpdate = (nextProps) => {
     if (nextProps.id !== this.props.id) {
@@ -104,10 +109,7 @@ class CrypkoPage extends Component {
     return false;
   };
   componentDidUpdate = () => {
-    const unfetchNodes = needFetchNodes(this.state.graph).filter(
-      (id) => !this.props.fetching[id]
-    );
-    this.props.fetchCache(unfetchNodes).then();
+    this.fetchDetail();
   };
 
   static async getInitialProps({ query, store, isServer }) {
@@ -124,14 +126,27 @@ class CrypkoPage extends Component {
     };
   }
 
+  updateDimensions = () => {
+    this.setState({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+  };
+  fetchDetail = () => {
+    const unfetchNodes = needFetchNodes(this.state.graph).filter(
+      (id) => !this.props.fetching[id]
+    );
+    this.props.fetchCache(unfetchNodes).then();
+  };
+
   render() {
     console.warn('Page');
     const { fetchCache } = this.props;
-    const { graph } = this.state;
+    const { graph, width, height } = this.state;
 
     return (
       <Layout>
-        <CrypkoTree width={1200} height={800}>
+        <CrypkoTree width={width} height={height}>
           <CrypkoNodes graph={graph} fetchCache={fetchCache} />
         </CrypkoTree>
       </Layout>

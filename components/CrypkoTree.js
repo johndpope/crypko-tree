@@ -116,6 +116,10 @@ class CrypkoTree extends PureComponent {
         style={{
           display: 'inline',
           cursor: 'move',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          zIndex: -1,
         }}
         width={width}
         height={height}
