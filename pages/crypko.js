@@ -9,6 +9,13 @@ import CrypkoTree from '../components/CrypkoTree';
 import * as types from '../util/types';
 import { URI_API } from '../util/common';
 
+async function apiDetail(crypkoId) {
+  console.log(`fetch ${crypkoId}`);
+  const res = await fetch(`${URI_API}/crypkos/${crypkoId}/detail`);
+  const json = await res.json();
+  return json;
+}
+
 function makeGraph({ id, cache, min, max, base = null }, depth = 0, from = 0) {
   const detail = cache[id];
   const originRange = () => depth >= 0 && depth < max;
@@ -103,9 +110,12 @@ class CrypkoPage extends Component {
     this.props.fetchCache(unfetchNodes).then();
   };
 
-  static async getInitialProps({ query }) {
+  static async getInitialProps({ query, store, isServer }) {
     const { id } = query;
-
+    if (!isServer && !store.getState().details[id]) {
+      const json = await apiDetail(id);
+      store.dispatch(cacheModule.add(id, json));
+    }
     return {
       id: Number(id),
       min: -1,
@@ -133,13 +143,6 @@ CrypkoPage.propTypes = {
   fetching: types.crypkoFetching.isRequired,
   fetchCache: types.func.isRequired,
 };
-
-async function apiDetail(crypkoId) {
-  console.log(`fetch ${crypkoId}`);
-  const res = await fetch(`${URI_API}/crypkos/${crypkoId}/detail`);
-  const json = await res.json();
-  return json;
-}
 
 export default connect(
   (state) => ({
