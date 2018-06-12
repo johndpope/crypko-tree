@@ -120,6 +120,9 @@ class CrypkoTree extends PureComponent {
           top: 0,
           left: 0,
           zIndex: -1,
+          imageRendering: 'optimizeSpeed',
+          shapeRendering: 'optimizeSpeed',
+          textRendering: 'optimizeSpeed',
         }}
         width={width}
         height={height}
