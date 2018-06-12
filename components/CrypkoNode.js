@@ -43,7 +43,6 @@ class CrypkoNode extends Component {
       padding,
       edgeX,
       edgeY,
-      style,
       detail,
       isCached,
     } = this.props;
@@ -74,7 +73,6 @@ class CrypkoNode extends Component {
                 style={{
                   overflow: 'visible',
                   cursor: 'pointer',
-                  ...style,
                 }}
               >
                 <CrypkoImage
@@ -111,13 +109,11 @@ CrypkoNode.propTypes = {
   padding: types.number.isRequired,
   edgeX: types.number,
   edgeY: types.number,
-  style: types.style,
 };
 CrypkoNode.defaultProps = {
   detail: null,
   edgeX: NaN,
   edgeY: NaN,
-  style: {},
 };
 
 export default CrypkoNode;

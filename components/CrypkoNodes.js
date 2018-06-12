@@ -1,5 +1,4 @@
 import { pure } from 'recompose';
-import { TransitionMotion, spring } from 'react-motion';
 
 import CrypkoNode from './CrypkoNode';
 import * as types from '../util/types';
@@ -150,30 +149,6 @@ function CrypkoNodes(props) {
   const nodes = makeNodes(props);
   const nodesWithKey = addUniqueKey(nodes);
 
-  if (props.useFade) {
-    return (
-      <TransitionMotion
-        willLeave={() => ({ opacity: spring(0) })}
-        styles={nodesWithKey.map((node) => ({
-          key: node.key,
-          style: { opacity: 1.0 },
-          data: node,
-        }))}
-      >
-        {(styles) => (
-          <g>
-            {styles.map((config) => (
-              <CrypkoNode
-                {...config.data}
-                style={config.style}
-                fetchCache={fetchCache}
-              />
-            ))}
-          </g>
-        )}
-      </TransitionMotion>
-    );
-  }
   return nodesWithKey.map((node) => (
     <CrypkoNode {...node} fetchCache={fetchCache} />
   ));
