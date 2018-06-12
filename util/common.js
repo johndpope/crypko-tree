@@ -1,4 +1,4 @@
-export const APP_NAME = 'crypko-tree';
+export const APP_NAME = 'Crypko Explorer';
 export const URI_API = 'https://api.crypko.ai';
 export const URI_IMG = 'https://img.crypko.ai/daisy/';
 export const URI_IMG2 = 'https://storage.googleapis.com/img.crypko.ai/daisy/';
