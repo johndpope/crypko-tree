@@ -138,9 +138,13 @@ class CrypkoTree extends PureComponent {
             <feGaussianBlur result="blurOut" in="offOut" stdDeviation="8" />
             <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
           </filter>
-          <linearGradient id="linear" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient id="linearGray" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#fff" />
             <stop offset="100%" stopColor="#666" />
+          </linearGradient>
+          <linearGradient id="linearBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#fff" />
+            <stop offset="100%" stopColor="#669" />
           </linearGradient>
         </defs>
         {children}

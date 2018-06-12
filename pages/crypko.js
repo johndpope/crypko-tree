@@ -125,12 +125,13 @@ class CrypkoPage extends Component {
 
   render() {
     console.warn('Page');
+    const { fetchCache } = this.props;
     const { graph } = this.state;
 
     return (
       <Layout>
         <CrypkoTree width={1200} height={800}>
-          <CrypkoNodes graph={graph} />
+          <CrypkoNodes graph={graph} fetchCache={fetchCache} />
         </CrypkoTree>
       </Layout>
     );
@@ -152,7 +153,9 @@ export default connect(
   (dispatch) => ({
     fetchCache: async (ids) => {
       ids.forEach((id) => dispatch(cacheModule.fetch(id)));
-      const jsons = await Promise.all(ids.map(apiDetail));
+
+      const apiPromises = ids.map(apiDetail);
+      const jsons = await Promise.all(apiPromises);
       jsons.forEach((json, i) => dispatch(cacheModule.add(ids[i], json)));
     },
   })

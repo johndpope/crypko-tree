@@ -22,8 +22,19 @@ class CrypkoNode extends Component {
     return true;
   };
 
+  onMouseEnter = () => {
+    this.timerId = setTimeout(() => {
+      if (!this.props.isCached) {
+        this.props.fetchCache([this.props.id]);
+      }
+    }, 200);
+  };
+  onMouseLeave = () => {
+    clearTimeout(this.timerId);
+  };
+
   render() {
-    console.warn('Node');
+    console.warn(`Node`);
     const {
       id,
       ax,
@@ -34,6 +45,7 @@ class CrypkoNode extends Component {
       edgeY,
       style,
       detail,
+      isCached,
     } = this.props;
 
     const cx = ax - baseSize / 2;
@@ -57,13 +69,19 @@ class CrypkoNode extends Component {
               <svg
                 x={x}
                 y={y}
+                onMouseEnter={this.onMouseEnter}
+                onMouseLeave={this.onMouseLeave}
                 style={{
                   overflow: 'visible',
                   cursor: 'pointer',
                   ...style,
                 }}
               >
-                <CrypkoImage detail={detail} baseSize={baseSize} />
+                <CrypkoImage
+                  detail={detail}
+                  baseSize={baseSize}
+                  isCached={isCached}
+                />
                 <text
                   x={0}
                   y={baseSize + padding * 2}
@@ -84,6 +102,8 @@ class CrypkoNode extends Component {
 
 CrypkoNode.propTypes = {
   detail: types.crypkoBase,
+  isCached: types.bool.isRequired,
+  fetchCache: types.func.isRequired,
   id: types.number.isRequired,
   ax: types.number.isRequired,
   ay: types.number.isRequired,

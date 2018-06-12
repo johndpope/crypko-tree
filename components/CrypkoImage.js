@@ -50,7 +50,7 @@ class CrypkoImage extends Component {
     return true;
   };
   render() {
-    const { detail, img, baseSize } = this.props;
+    const { detail, img, baseSize, isCached } = this.props;
 
     getImageActualSize(img);
 
@@ -60,7 +60,7 @@ class CrypkoImage extends Component {
         cy={baseSize / 2}
         r={baseSize / 2}
         fill="transparent"
-        stroke="url(#linear)"
+        stroke={`url(#${isCached ? 'linearBlue' : 'linearGray'})`}
       />
     );
 
@@ -87,6 +87,7 @@ CrypkoImage.propTypes = {
   img: types.string,
   detail: types.crypko,
   baseSize: types.number.isRequired,
+  isCached: types.bool.isRequired,
 };
 
 CrypkoImage.defaultProps = {

@@ -113,6 +113,7 @@ function makeNodes(props) {
     ay: ay + oy,
     id: graph.id,
     detail: graph.detail,
+    isCached: graph.isCached,
     baseSize,
     padding,
     edgeX,
@@ -145,6 +146,7 @@ function addUniqueKey(nodes) {
 
 function CrypkoNodes(props) {
   console.warn('Nodes');
+  const { fetchCache } = props;
   const nodes = makeNodes(props);
   const nodesWithKey = addUniqueKey(nodes);
 
@@ -161,14 +163,20 @@ function CrypkoNodes(props) {
         {(styles) => (
           <g>
             {styles.map((config) => (
-              <CrypkoNode {...config.data} style={config.style} />
+              <CrypkoNode
+                {...config.data}
+                style={config.style}
+                fetchCache={fetchCache}
+              />
             ))}
           </g>
         )}
       </TransitionMotion>
     );
   }
-  return nodesWithKey.map((node) => <CrypkoNode {...node} />);
+  return nodesWithKey.map((node) => (
+    <CrypkoNode {...node} fetchCache={fetchCache} />
+  ));
 }
 
 CrypkoNodes.propTypes = {
