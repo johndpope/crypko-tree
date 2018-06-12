@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Motion, spring } from 'react-motion';
 import { shallowEqualProps } from 'shallow-equal-props';
 
+import CrypkoEdge from './CrypkoEdge';
 import CrypkoImage from './CrypkoImage';
 import * as types from '../util/types';
 
@@ -37,32 +38,21 @@ class CrypkoNode extends Component {
 
     const cx = ax - baseSize / 2;
     const cy = ay - baseSize / 2;
-    let edge = null;
-    if (!Number.isNaN(edgeX) && !Number.isNaN(edgeY)) {
-      const edgePath = `M ${edgeX},${edgeY} v ${(ay - edgeY) / 2} h ${ax -
-        edgeX} v ${(ay - edgeY) / 2}`;
-      edge = (
-        <path
-          d={edgePath}
-          stroke="gray"
-          strokeWidth="5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeDasharray="0,10"
-          fill="none"
-          style={style}
-        />
-      );
-    }
-
     return (
-      <>
-        {edge}
-        <Motion
-          defaultStyle={{ x: 0, y: 0 }}
-          style={{ x: spring(cx), y: spring(cy) }}
-        >
-          {({ x, y }) => (
+      <Motion
+        defaultStyle={{ x: edgeX || 0, y: edgeY || 0 }}
+        style={{ x: spring(cx), y: spring(cy) }}
+      >
+        {({ x, y }) => (
+          <>
+            {Number.isNaN(edgeX) || Number.isNaN(edgeY) ? null : (
+              <CrypkoEdge
+                fromX={edgeX}
+                fromY={edgeY}
+                toX={x + baseSize / 2}
+                toY={y + baseSize / 2}
+              />
+            )}
             <Link href={{ pathname: '/crypko', query: { id } }} as={`/c/${id}`}>
               <svg
                 x={x}
@@ -85,15 +75,15 @@ class CrypkoNode extends Component {
                 </text>
               </svg>
             </Link>
-          )}
-        </Motion>
-      </>
+          </>
+        )}
+      </Motion>
     );
   }
 }
 
 CrypkoNode.propTypes = {
-  detail: types.crypkoBase.isRequired,
+  detail: types.crypkoBase,
   id: types.number.isRequired,
   ax: types.number.isRequired,
   ay: types.number.isRequired,
@@ -104,6 +94,7 @@ CrypkoNode.propTypes = {
   style: types.style,
 };
 CrypkoNode.defaultProps = {
+  detail: null,
   edgeX: NaN,
   edgeY: NaN,
   style: {},
