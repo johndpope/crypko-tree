@@ -5,6 +5,7 @@ import { shallowEqualProps } from 'shallow-equal-props';
 
 import CrypkoEdge from './CrypkoEdge';
 import CrypkoImage from './CrypkoImage';
+import CrypkoName from './CrypkoName';
 import * as types from '../util/types';
 
 class CrypkoNode extends Component {
@@ -35,17 +36,7 @@ class CrypkoNode extends Component {
 
   render() {
     console.warn(`Node`);
-    const {
-      id,
-      ax,
-      ay,
-      baseSize,
-      padding,
-      edgeX,
-      edgeY,
-      detail,
-      isCached,
-    } = this.props;
+    const { id, ax, ay, baseSize, edgeX, edgeY, detail, isCached } = this.props;
 
     const cx = ax - baseSize / 2;
     const cy = ay - baseSize / 2;
@@ -80,15 +71,11 @@ class CrypkoNode extends Component {
                   baseSize={baseSize}
                   isCached={isCached}
                 />
-                <text
-                  x={0}
-                  y={baseSize + padding * 2}
-                  fill="gray"
-                  style={{ cursor: 'text' }}
-                >
-                  {(detail && detail.name) || `(${id})`}{' '}
-                  {detail && `Iter${detail.iteration}`}
-                </text>
+                <CrypkoName
+                  type="innerTop"
+                  name={(detail && detail.name) || `(${id})`}
+                  baseSize={baseSize}
+                />
               </svg>
             </Link>
           </>
@@ -106,7 +93,6 @@ CrypkoNode.propTypes = {
   ax: types.number.isRequired,
   ay: types.number.isRequired,
   baseSize: types.number.isRequired,
-  padding: types.number.isRequired,
   edgeX: types.number,
   edgeY: types.number,
 };

@@ -153,6 +153,7 @@ class CrypkoTree extends PureComponent {
             <stop offset="0%" stopColor="#fff" />
             <stop offset="100%" stopColor="#669" />
           </linearGradient>
+          <path id="curveInnerTop" d="M32,50,A 80 80 0,0,1 162,50" />
         </defs>
         {children}
       </svg>
